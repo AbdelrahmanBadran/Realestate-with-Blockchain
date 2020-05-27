@@ -38,12 +38,14 @@ public class TrnxPoolAdapter {
                 hashLst.add(Hashing.hash(trnx.getTrnxID(), "SHA-256") );
                 hashLst.add(Hashing.hash(trnx.getPayment(), "SHA-256") );                
                 hashLst.add(Hashing.hash(trnx.getTrnxDate().toString(), "SHA-256") );                
-                hashLst.add(simulate.digSign.sign(simulate.SELLER, String.join("|", hashLst)) );                
+                hashLst.add(simulate.digSign.sign(simulate.SELLER, String.join("|", hashLst)));                
             hashLstAll.add(hashLst);
         }
         return hashLstAll;
     }    
 }
+
+
 
 //DATA and DIGITAL SIGNATURE:
 //        Pair<String, String> pair1 = Pair.with("sample_hash1", "digital_signature1");

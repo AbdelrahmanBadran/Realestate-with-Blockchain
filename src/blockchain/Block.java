@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,26 +14,27 @@ import org.javatuples.Septet;
 public class Block implements Serializable{        
      
     public Block(long blockID,long  trnxcount, List<List<String>> data, String previoushash) {
-        List<Septet<String, String, String, String, String, String, String>> hashes = 
-            data.stream().map( elem -> Septet.fromCollection(elem) ).collect(Collectors.toList());
-        
+        List<Septet<String, String, String, String, String, String, String>> hashes = data
+                    .stream()
+                    .map( elem -> Septet.fromCollection(elem) )
+                    .collect(Collectors.toList());
+
         this.blockID = blockID;
         this.transactionCount = trnxcount;
         this.transactions = hashes;
         this.previousHash = previoushash;
         this.currentHash = this.blockHashCode(Block.genByteArr(this.transactions), this.previousHash, this.timestamp);
         this.timestamp = Calendar.getInstance().getTimeInMillis();          
-        this.nonce = new SecureRandom().nextLong();
+        this.nonce = Base64.getEncoder().encodeToString(hashing.Hashing.getSalt());
     }
-    
-    //private String encrypted_key_used for decryption
+        
     private long blockID;
     private String previousHash;
     private String currentHash;    
     private long transactionCount; 
     private List<Septet<String, String, String, String, String, String, String>> transactions; 
     private long timestamp;            
-    private long nonce;            
+    private String nonce;            
 
     public long getBlockID() {
         return blockID;
@@ -83,13 +84,13 @@ public class Block implements Serializable{
         this.timestamp = timestamp;
     }
 
-    public long getNonce() {
+    public String getNonce() {
         return nonce;
     }
 
-    public void setNonce(long nonce) {
+    public void setNonce(String nonce) {
         this.nonce = nonce;
-    }     
+    }  
     
     public String blockHashCode(byte[] data, String prevhash, long timestamp) {
         return Hashing.hash(data + prevhash + timestamp ,"SHA-256");
@@ -115,19 +116,6 @@ public class Block implements Serializable{
         
     @Override
     public String toString() {
-        return "Current Hash: " + this.currentHash + "\nPrevious Hash:" + this.previousHash + "\n";
+        return transactions + "\n";
     }
 }
-
-/*Javatuples
-Unit<A> (1 element)
-Pair<A,B> (2 elements)
-Triplet<A,B,C> (3 elements)
-Quartet<A,B,C,D> (4 elements)
-Quintet<A,B,C,D,E> (5 elements)
-Sextet<A,B,C,D,E,F> (6 elements)
-Septet<A,B,C,D,E,F,G> (7 elements)
-Octet<A,B,C,D,E,F,G,H> (8 elements)
-Ennead<A,B,C,D,E,F,G,H,I> (9 elements)
-Decade<A,B,C,D,E,F,G,H,I,J> (10 elements)
-*/

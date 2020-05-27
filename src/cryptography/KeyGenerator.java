@@ -8,8 +8,7 @@ public class KeyGenerator {
     
     KeyPairGenerator keygen;
     KeyPair pair;
-
-    //Generate the keys and store in files perminantly (to change it, I need to rerun: carefull)
+    
     public static KeyPair generateAsymetricKeys (String parentFile, String userID, String algorithm) {
         KeyGenerator maker = new KeyGenerator();
         
@@ -23,8 +22,7 @@ public class KeyGenerator {
         
         PublicKey pubkey = maker.pair.getPublic();
         PrivateKey prvkey = maker.pair.getPrivate();               
-        
-        //Write these keys to the file
+                
         KeyGenerator.persist(parentFile + userID + Config.PRIVATE_FILE, prvkey.getEncoded());
         KeyGenerator.persist(parentFile + userID + Config.PUBLIC_FILE, pubkey.getEncoded());        
         

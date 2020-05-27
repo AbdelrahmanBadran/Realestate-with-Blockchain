@@ -29,7 +29,7 @@ public class Blockchain {
         boolean isGenesis = Blockchain.isChainEmpty();
         
         if (isGenesis){ 
-            block = new Block(0, trnx_count, trnx_hashes, "0"); //genesis block
+            block = new Block(0, trnx_count, trnx_hashes, "0"); // Genesis block
         } 
         else{  
             bchain = Blockchain.get(); 

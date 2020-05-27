@@ -35,6 +35,7 @@ public class DigitalSignature {
             signature.update(data.getBytes());
             
             return signature.verify(Base64.getDecoder().decode(digitalSignature));
+            
         } catch (SignatureException | InvalidKeyException ex) {}
         return false;
     }      
