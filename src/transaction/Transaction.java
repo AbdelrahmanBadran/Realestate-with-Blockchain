@@ -11,58 +11,92 @@ import java.util.stream.Collectors;
 
 public class Transaction {
     
-    private static final String FILENAME = "data/trnxpool.txt";
+    private static final String FILENAME = "data/trnxpool.txt";        
     
-    private String orderItem;
-    private LocalDateTime orderDt;
+    private String propertyID;
+    private String ownerID;
+    private String buyerID;
     private String payment;
-    private String email;
-    private String deliveryAddr;
-    private String status;
-    private LocalDateTime trnxDt;
+    private String trnxID;                
+    private LocalDateTime trnxDate;
+    private String signature;
 
-    public Transaction(String orderItem, LocalDateTime orderDt, String payment, String email, String deliveryAddr, String status, LocalDateTime trnxDt) {
-        this.orderItem = orderItem;
-        this.orderDt = orderDt;
+    public Transaction(String propertyID, String ownerID, String buyerID, String payment, String trnxID, LocalDateTime trnxDt, String signature) {
+        this.propertyID = propertyID;
+        this.ownerID = ownerID;
+        this.buyerID = buyerID;
         this.payment = payment;
-        this.email = email;
-        this.deliveryAddr = deliveryAddr;
-        this.status = status;
-        this.trnxDt = trnxDt;
+        this.trnxID = trnxID;        
+        this.trnxDate = trnxDt;
+        this.signature = signature;
     }
 
-    public String getOrderItem() {
-        return orderItem;
+    public String getPropertyID() {
+        return propertyID;
     }
 
-    public LocalDateTime getOrderDt() {
-        return orderDt;
+    public void setPropertyID(String propertyID) {
+        this.propertyID = propertyID;
+    }
+
+    public String getOwnerID() {
+        return ownerID;
+    }
+
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
+    }
+
+    public String getBuyerID() {
+        return buyerID;
+    }
+
+    public void setBuyerID(String buyerID) {
+        this.buyerID = buyerID;
     }
 
     public String getPayment() {
         return payment;
     }
 
-    public String getEmail() {
-        return email;
+    public void setPayment(String payment) {
+        this.payment = payment;
     }
 
-    public String getDeliveryAddr() {
-        return deliveryAddr;
+    public String getTrnxID() {
+        return trnxID;
     }
 
-    public String getStatus() {
-        return status;
+    public void setTrnxID(String trnxID) {
+        this.trnxID = trnxID;
     }
 
-    public LocalDateTime getTrnxDt() {
-        return trnxDt;
+    public LocalDateTime getTrnxDate() {
+        return trnxDate;
     }
-    
+
+    public void setTrnxDate(LocalDateTime trnxDate) {
+        this.trnxDate = trnxDate;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+     
     public static List<String> getAll(){
         try {
             return Files.readAllLines(Paths.get(FILENAME)).stream().collect(Collectors.toList());
         } catch (IOException ex) {return null;}
+    }
+    
+    public static long transactionCount() {
+        try {        
+            return Files.lines(Paths.get(FILENAME)).count();
+        } catch (IOException ex) {return 0;}
     }
     
     public static void empty(){
@@ -70,9 +104,9 @@ public class Transaction {
             FileChannel.open(Paths.get(FILENAME), StandardOpenOption.WRITE).truncate(0).close();
         } catch (IOException ex) {}
     }
-
+    
     @Override
     public String toString() {
-        return "Transaction{" + "orderItem=" + orderItem + ", orderDt=" + orderDt + ", payment=" + payment + ", email=" + email + ", deliveryAddr=" + deliveryAddr + ", status=" + status + ", trnxDt=" + trnxDt + '}';
+        return "Transaction{" + "propertyID=" + propertyID + ", ownerID=" + ownerID + ", buyerID=" + buyerID + ", payment=" + payment + ", trnxID=" + trnxID + ", trnxDate=" + trnxDate + ", signature=" + signature + '}';
     }   
 }

@@ -1,18 +1,22 @@
 package cryptography;
 
 /**
- * Algorithm
+ * Algorithms
  * Location folders for storing public/private keys
  */
+
 public class Config {
  
-    //Cryptography Algorithm
-    public static final String CRYPTO_ALGO = "RSA";
+    //Cryptography Algorithm & Parent File
+    public static final String CRYPTO_ALGO = "RSA";    
+    public static final String CRYPTO_FILE = "Crypto/"; 
+        
+    //Digital Signature Algorithm & Parent File
+    public static final String DS_ALGO_COMBO = "SHA256WithDSA";
+    public static final String DS_ALGO = "DSA";    
+    public static final String DS_FILE = "DigSign/";
     
-    //Digital Signature Algorithm
-    public static final String DS_ALGO = "DSA";
-    
-    //Location folders for storing public/private keys
-    public static final String PUBLIC_FILE = "KeyPair/PublicKey";    
-    public static final String PRIVATE_FILE = "KeyPair/PrivateKey";             
+    //Sub Files for Parent Files
+    public static final String PUBLIC_FILE = "/PublicKey";    
+    public static final String PRIVATE_FILE = "/PrivateKey"; 
 }

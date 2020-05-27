@@ -5,8 +5,7 @@ import java.util.Base64;
 import javax.crypto.*;
 
 public class Crypto {
-    
-    //cipher object    
+        
     private Cipher cipher;
 
     public Crypto() {
@@ -16,17 +15,18 @@ public class Crypto {
         } catch (Exception ex) {System.out.println("err: Crypto Algorithm");}
     }
         
-    public String encrypt(String rawInput, PrivateKey key){
+    public String encrypt(String rawText, PrivateKey key){
         String cipherText = "";
         
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] cipherBytes = cipher.doFinal(rawInput.getBytes());
+            
+            byte[] cipherBytes = cipher.doFinal(rawText.getBytes());
             
             //Convert the cipherBytes into String object
             cipherText = Base64.getEncoder().encodeToString(cipherBytes);
             
-        } catch (Exception ex) {System.out.println("err: Encyption");} 
+        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex) {System.out.println("err: Encyption");} 
         
         return cipherText;
     }
@@ -38,9 +38,10 @@ public class Crypto {
             
             //convert the string cipherText object into bytes[]
             byte[] cipherBytes = Base64.getDecoder().decode(cipherText);
+            
             originalText = new String(cipher.doFinal(cipherBytes));
         
-        }catch(Exception ex){System.out.println("err: Decription");}
+        }catch(InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex){System.out.println("err: Decryption");}
         
         return originalText;
     }

@@ -1,46 +1,54 @@
 package blockchain;
 
-import hashing.HashingUtils;
+import hashing.Hashing;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.javatuples.Septet;
 
-public class Block implements Serializable{
-    
-    public Block(List<List<String>> data, String previoushash) {
+public class Block implements Serializable{        
+     
+    public Block(long blockID,long  trnxcount, List<List<String>> data, String previoushash) {
         List<Septet<String, String, String, String, String, String, String>> hashes = 
             data.stream().map( elem -> Septet.fromCollection(elem) ).collect(Collectors.toList());
         
-        this.data = hashes;
-        this.previoushash = previoushash;
-        this.timestamp = Calendar.getInstance().getTimeInMillis();
-        this.currentHash = this.blockHashCode(Block.genByteArr(this.data), this.previoushash, this.timestamp);
+        this.blockID = blockID;
+        this.transactionCount = trnxcount;
+        this.transactions = hashes;
+        this.previousHash = previoushash;
+        this.currentHash = this.blockHashCode(Block.genByteArr(this.transactions), this.previousHash, this.timestamp);
+        this.timestamp = Calendar.getInstance().getTimeInMillis();          
+        this.nonce = new SecureRandom().nextLong();
     }
     
-//    private int block_ID;
-//    private int prev_block_ID;
-//    private int next_block_ID;    
-    
-    private String previoushash;
+    //private String encrypted_key_used for decryption
+    private long blockID;
+    private String previousHash;
     private String currentHash;    
-    private List<Septet<String, String, String, String, String, String, String>> data; 
-    private long timestamp;        
-    
-    //private int transaction_ID
-    //pivate transaction_count;    
-    //private int nonce;
+    private long transactionCount; 
+    private List<Septet<String, String, String, String, String, String, String>> transactions; 
+    private long timestamp;            
+    private long nonce;            
 
-    public String getPrevioushash() {
-        return previoushash;
+    public long getBlockID() {
+        return blockID;
     }
 
-    public void setPrevioushash(String previoushash) {
-        this.previoushash = previoushash;
+    public void setBlockID(long blockID) {
+        this.blockID = blockID;
+    }
+
+    public String getPreviousHash() {
+        return previousHash;
+    }
+
+    public void setPreviousHash(String previousHash) {
+        this.previousHash = previousHash;
     }
 
     public String getCurrentHash() {
@@ -51,12 +59,20 @@ public class Block implements Serializable{
         this.currentHash = currentHash;
     }
 
-    public List<Septet<String, String, String, String, String, String, String>> getData() {
-        return data;
+    public long getTransactionCount() {
+        return transactionCount;
     }
 
-    public void setData(List<Septet<String, String, String, String, String, String, String>> data) {
-        this.data = data;
+    public void setTransactionCount(long transactionCount) {
+        this.transactionCount = transactionCount;
+    }
+
+    public List<Septet<String, String, String, String, String, String, String>> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Septet<String, String, String, String, String, String, String>> transactions) {
+        this.transactions = transactions;
     }
 
     public long getTimestamp() {
@@ -66,15 +82,17 @@ public class Block implements Serializable{
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
- 
-    
-    @Override
-    public int hashCode() {
-        return super.hashCode();
+
+    public long getNonce() {
+        return nonce;
     }
+
+    public void setNonce(long nonce) {
+        this.nonce = nonce;
+    }     
     
     public String blockHashCode(byte[] data, String prevhash, long timestamp) {
-        return HashingUtils.newhash(data + prevhash + timestamp ,"SHA-256");
+        return Hashing.hash(data + prevhash + timestamp ,"SHA-256");
     }	    
         
     private static byte[] genByteArr(List<Septet<String, String, String, String, String, String, String>> b) {
@@ -97,7 +115,7 @@ public class Block implements Serializable{
         
     @Override
     public String toString() {
-        return "Current Hash: " + this.currentHash + "\nPrevious Hash:" + this.previoushash + "\n";
+        return "Current Hash: " + this.currentHash + "\nPrevious Hash:" + this.previousHash + "\n";
     }
 }
 
@@ -113,19 +131,3 @@ Octet<A,B,C,D,E,F,G,H> (8 elements)
 Ennead<A,B,C,D,E,F,G,H,I> (9 elements)
 Decade<A,B,C,D,E,F,G,H,I,J> (10 elements)
 */
-
-//DATA and DIGITAL SIGNATURE:
-//        Pair<String, String> pair1 = Pair.with("sample_hash1", "digital_signature1");
-//        Pair<String, String> pair2 = Pair.with("sample_hash2", "digital_signature2");
-//        Pair<String, String> pair3 = Pair.with("sample_hash2", "digital_signature3");
-//        
-//        //collect 3 items and etc
-//        Triplet<Pair<String, String>, Pair<String, String>, Pair<String, String>> signed_data = Triplet.with(pair1, pair2, pair3);
-//        System.out.println( signed_data );
-
-// BLOCK CLASS
-//public class DataStructure {    
-//        Triplet<String, String, String> metaData = new Triplet("OrderID", "Payment", "DataTranx");           //        
-//        List<String> dataList = Arrays.asList("1001", "200.00", "20/4/2020");        
-//        Triplet<String, String, String> orderData = Triplet.fromCollection(dataList);        
-//}

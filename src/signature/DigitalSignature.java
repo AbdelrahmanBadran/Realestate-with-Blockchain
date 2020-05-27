@@ -1,49 +1,41 @@
 package signature;
 
-import cryptography.Config;
+import cryptography.*;
 import java.security.*;
 import java.util.Base64;
 
 public class DigitalSignature {
-    Signature signature;
-    SecureRandom rand = new SecureRandom();
     
-    KeyPairGenerator keygen;
-    KeyPair keypair;
+    Signature signature;            
+    SecureRandom rand = new SecureRandom();
             
-    public DigitalSignature(){        
-        try{
-            keygen = KeyPairGenerator.getInstance(Config.DS_ALGO);            
-            
-            //############################# USE USER GENERATED KEYS ##########################
+    public DigitalSignature(){                                                       
+        try {            
+            signature = Signature.getInstance(Config.DS_ALGO_COMBO);   
+        } 
+        catch (NoSuchAlgorithmException ex) {}                    
+    }    
+        
+    public String sign(String userID, String data) {        
 
-            keypair = keygen.generateKeyPair();        
-            signature = Signature.getInstance("SHA256WithDSA"); //Combines Hashing and Encyption         
+        try {
+            signature.initSign(KeyRetriever.getPrivateKey(Config.DS_FILE + userID + Config.PRIVATE_FILE, Config.DS_ALGO), rand);
+            signature.update(data.getBytes());
             
-        }catch(NoSuchAlgorithmException e){}
+            return Base64.getEncoder().encodeToString(signature.sign());
+            
+        } catch (InvalidKeyException | SignatureException ex) {}
+        return null;        
     }    
     
-    //    PASS IN USER PRIVATE KEY
-    public String sign(String data) throws Exception{
-        String digitalSignature = null;
-
-        signature.initSign(keypair.getPrivate(), rand);
+    public boolean verify(String userID, String data, String digitalSignature) {        
         
-        signature.update(data.getBytes());
-        
-        //Generate DS
-        byte[] digital_sign = signature.sign();
-        digitalSignature = Base64.getEncoder().encodeToString(digital_sign);
-        
-        return digitalSignature;
-    }
-    
-    //    PASS IN OTHER'S PUBLIC KEY
-    public boolean verify(String data, String digitalSignature) throws Exception{        
-        signature.initVerify(keypair.getPublic());
-        
-        signature.update(data.getBytes());              
-        
-        return signature.verify(Base64.getDecoder().decode(digitalSignature));
-    }  
+        try {
+            signature.initVerify(KeyRetriever.getPublicKey(Config.DS_FILE + userID + Config.PUBLIC_FILE, Config.DS_ALGO));
+            signature.update(data.getBytes());
+            
+            return signature.verify(Base64.getDecoder().decode(digitalSignature));
+        } catch (SignatureException | InvalidKeyException ex) {}
+        return false;
+    }      
 }
