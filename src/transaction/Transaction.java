@@ -21,7 +21,9 @@ public class Transaction {
     private LocalDateTime trnxDate;
     private String signature;
 
-    public Transaction(String propertyID, String ownerID, String buyerID, String payment, String trnxID, LocalDateTime trnxDt, String signature) {
+    public Transaction(String propertyID, String ownerID, 
+            String buyerID, String payment, String trnxID, 
+            LocalDateTime trnxDt, String signature) {
         this.propertyID = propertyID;
         this.ownerID = ownerID;
         this.buyerID = buyerID;

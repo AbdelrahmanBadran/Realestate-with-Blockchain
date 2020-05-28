@@ -20,7 +20,7 @@ public class simulate {
         
         //RUN THIS KEYGENERATOR ONLY ONCE
         //Generate & Store Keys for Crypto & DSignature (run it once for each user only)
-        KeyGenerator.generateAsymetricKeys(Config.CRYPTO_FILE, SELLER, Config.CRYPTO_ALGO);         
+        KeyGenerator.generateAsymetricKeys(Config.CRYPTO_FILE, BUYER, Config.CRYPTO_ALGO);         
         KeyGenerator.generateAsymetricKeys(Config.DS_FILE , SELLER, Config.DS_ALGO);                                        
 
         
@@ -32,20 +32,24 @@ public class simulate {
         //Decrypt Encrypted Seller Transaction Property ID
         String decryptedPropertyID = 
                 crypto.decrypt(blockchain.Blockchain.get().getFirst().getTransactions().get(0).getValue0() , 
-                        KeyRetriever.getPublicKey(Config.CRYPTO_FILE + SELLER + Config.PUBLIC_FILE, Config.CRYPTO_ALGO));        
+                        KeyRetriever.getPrivateKey(Config.CRYPTO_FILE + BUYER, Config.CRYPTO_ALGO));        
         System.out.println(decryptedPropertyID);        
             
         
-        // ### Verification ###
+        //                  ### Verification ###
+        
         //Get Transaction hash codes except last one (Signature)
         List<String> transactionList = new ArrayList();
         for (int i = 0; i < 6 ; i++) {
-            transactionList.add((String) blockchain.Blockchain.get().getFirst().getTransactions().get(0).getValue(i));
+            transactionList.add((String) blockchain.Blockchain.get().
+                    getFirst().getTransactions().get(0).getValue(i));
         }                
         
-        //Verify (SELLER | Transaction data from for loop above as a list | Digital Signature on dat)
-        boolean isVerified = digSign.verify(SELLER , String.join("|", transactionList) , 
-                        blockchain.Blockchain.get().getFirst().getTransactions().get(0).getValue6());               
+        //Verify (DS PUBLIC KEY | Transaction data | Digital Signature)
+        boolean isVerified = digSign.verify(SELLER , 
+                String.join("|", transactionList) , 
+                blockchain.Blockchain.get().getFirst().
+                        getTransactions().get(0).getValue6());               
         System.out.println("\nVerified?: " + isVerified);
     }     
 }

@@ -11,7 +11,7 @@ public class Config {
     public static final String CRYPTO_ALGO = "RSA";    
     public static final String CRYPTO_FILE = "Crypto/"; 
         
-    //Digital Signature Algorithm & Parent File
+    //Digital Signature Algorithm and Public Key Generation Algorithm
     public static final String DS_ALGO_COMBO = "SHA256WithDSA";
     public static final String DS_ALGO = "DSA";    
     public static final String DS_FILE = "DigSign/";

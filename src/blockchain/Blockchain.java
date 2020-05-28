@@ -23,6 +23,7 @@ public class Blockchain {
     public static void chainBlock() {                 
         List<List<String>> trnx_hashes = TrnxPoolAdapter.getTransactionsHashes();
         if(trnx_hashes.isEmpty()){return;}                
+        
         long trnx_count = trnx_hashes.size();        
         
         Block block;
@@ -65,7 +66,7 @@ public class Blockchain {
             Files.write(Paths.get("master/ledger.txt"), temp.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException ex) {}        
         
-        System.out.println( temp );
+        System.out.println( temp);
     }
     
     public static LinkedList<Block> get() {

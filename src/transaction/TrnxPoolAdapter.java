@@ -22,8 +22,7 @@ public class TrnxPoolAdapter {
                 .map(arr -> new Transaction( arr[0], arr[1] , arr[2], arr[3], arr[4], LocalDateTime.parse(arr[5], FORMATTER), arr[6] ))
                 .collect( Collectors.toList() );
     }
-    
-    //2D collection
+        
     public static List<List<String>> getTransactionsHashes(){
         
         List<Transaction> trnxPool = getTransactions();
@@ -32,13 +31,18 @@ public class TrnxPoolAdapter {
         List<List<String>> hashLstAll = new ArrayList();                
         for (Transaction trnx : trnxPool) {              
             List<String> hashLst = new ArrayList();
-                hashLst.add( simulate.crypto.encrypt(trnx.getPropertyID(), KeyRetriever.getPrivateKey(Config.CRYPTO_FILE + simulate.SELLER + Config.PRIVATE_FILE, Config.CRYPTO_ALGO)) );
+                hashLst.add( simulate.crypto.encrypt(trnx.getPropertyID(), 
+                        KeyRetriever.getPublicKey(Config.CRYPTO_FILE + 
+                                simulate.BUYER, Config.CRYPTO_ALGO)) );
+                
                 hashLst.add(Hashing.hash(trnx.getOwnerID(), "SHA-256") );
                 hashLst.add(Hashing.hash(trnx.getBuyerID(), "SHA-256") );
                 hashLst.add(Hashing.hash(trnx.getTrnxID(), "SHA-256") );
                 hashLst.add(Hashing.hash(trnx.getPayment(), "SHA-256") );                
-                hashLst.add(Hashing.hash(trnx.getTrnxDate().toString(), "SHA-256") );                
-                hashLst.add(simulate.digSign.sign(simulate.SELLER, String.join("|", hashLst)));                
+                hashLst.add(Hashing.hash(trnx.getTrnxDate().toString(), 
+                        "SHA-256") );                
+                hashLst.add(simulate.digSign.sign(simulate.SELLER, 
+                        String.join("|", hashLst)));                
             hashLstAll.add(hashLst);
         }
         return hashLstAll;

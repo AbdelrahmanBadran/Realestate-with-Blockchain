@@ -19,7 +19,7 @@ public class DigitalSignature {
     public String sign(String userID, String data) {        
 
         try {
-            signature.initSign(KeyRetriever.getPrivateKey(Config.DS_FILE + userID + Config.PRIVATE_FILE, Config.DS_ALGO), rand);
+            signature.initSign(KeyRetriever.getPrivateKey(Config.DS_FILE + userID, Config.DS_ALGO), rand);
             signature.update(data.getBytes());
             
             return Base64.getEncoder().encodeToString(signature.sign());
@@ -31,7 +31,7 @@ public class DigitalSignature {
     public boolean verify(String userID, String data, String digitalSignature) {        
         
         try {
-            signature.initVerify(KeyRetriever.getPublicKey(Config.DS_FILE + userID + Config.PUBLIC_FILE, Config.DS_ALGO));
+            signature.initVerify(KeyRetriever.getPublicKey(Config.DS_FILE + userID, Config.DS_ALGO));
             signature.update(data.getBytes());
             
             return signature.verify(Base64.getDecoder().decode(digitalSignature));

@@ -14,7 +14,7 @@ public class KeyRetriever {
     public static PrivateKey getPrivateKey (String filename, String algorithm) {        
         
         try {
-            byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+            byte[] keyBytes = Files.readAllBytes(Paths.get(filename+Config.PRIVATE_FILE));
             
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory factory = KeyFactory.getInstance(algorithm);
@@ -27,7 +27,7 @@ public class KeyRetriever {
     public static PublicKey getPublicKey (String filename, String algorithm) {        
        
         try {
-            byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
+            byte[] keyBytes = Files.readAllBytes(Paths.get(filename+Config.PUBLIC_FILE));
             
             X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
             KeyFactory factory = KeyFactory.getInstance(algorithm);

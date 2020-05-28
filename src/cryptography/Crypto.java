@@ -15,7 +15,7 @@ public class Crypto {
         } catch (Exception ex) {System.out.println("err: Crypto Algorithm");}
     }
         
-    public String encrypt(String rawText, PrivateKey key){
+    public String encrypt(String rawText, PublicKey  key){
         String cipherText = "";
         
         try {
@@ -31,7 +31,7 @@ public class Crypto {
         return cipherText;
     }
         
-    public String decrypt(String cipherText, PublicKey key){
+    public String decrypt(String cipherText, PrivateKey key){
         String originalText = "";
         try{
             cipher.init(Cipher.DECRYPT_MODE, key);
